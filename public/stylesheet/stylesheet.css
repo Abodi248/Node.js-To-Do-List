@@ -1,0 +1,132 @@
+/* Global font setting */
+* {
+    font-family: "Roboto", sans-serif;
+}
+
+/* Body styling - background and centering */
+body {
+    background-image: url(/assets/bg.png); /* Background image */
+    background-size: cover !important; /* Cover entire viewport */
+    display: flex;
+    justify-content: center; /* Horizontal centering */
+    min-height: 100vh; /* Full viewport height */
+    margin: 0;
+    align-items: center; /* Vertical centering */
+}
+
+/* Main container styling */
+.container {
+    min-height: 550px;
+    width: 450px;
+    max-height: 600px;
+    background-color: rgba(255, 255, 255, 0.411); /* Semi-transparent white */
+    border-radius: 15px; /* Rounded corners */
+    padding: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Hide horizontal scroll */
+}
+
+/* Header styling */
+.header {
+    text-align: center;
+    background-color: black;
+    border-radius: 15px 15px 0 0; /* Rounded top corners */
+    padding-bottom: 10px;
+}
+
+/* Header text styling */
+.header>h2 {
+    color: white;
+    padding-top: 2%;
+    font-family: "Roboto Slab", serif; /* Special font */
+}
+
+/* Individual task item styling */
+.task {
+    display: flex;
+    align-items: center; /* Vertical center alignment */
+    margin: 20px;
+    border-bottom: 1px solid rgb(187, 187, 187); /* Bottom border */
+    font-size: 1.5rem; /* Text size */
+}
+
+/* Task paragraph styling */
+.task p {
+    margin: 0; /* Remove default margins */
+}
+
+/* Checkbox spacing */
+.checkbox {
+    margin-right: 10px;
+}
+
+/* Icon styling */
+.icon {
+    height: 20px;
+    width: 20px; /* Consistent sizing */
+    display: block; /* Proper alignment */
+}
+
+/* Button styling */
+button {
+    margin-left: 10px;
+    margin-right: 20px;
+    border: none; /* Remove borders */
+    background: none; /* Transparent background */
+    padding: 0; /* Remove padding */
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+}
+
+/* Form layout */
+form {
+    display: flex; /* Flex layout */
+    align-items: center; /* Vertical centering */
+}
+
+/* Text input styling */
+input[type="text"] {
+    text-align: left;
+    height: 60px;
+    top: 10px;
+    border: none; /* No border */
+    border-bottom: 0.5px solid black; /* Bottom border only */
+    background: transparent; /* See-through background */
+    font-size: 20px; /* Text size */
+    width: 80%; /* Width relative to container */
+}
+
+/* Focus state for inputs */
+input[type="text"]:focus {
+    outline: none; /* Remove default outline */
+    box-shadow: inset 0 -3px 0 0 #1310186b; /* Underline effect */
+}
+
+/* Placeholder text styling */
+::placeholder {
+    color: lightgray; /* Light gray placeholder */
+    opacity: 1; /* Ensure visibility */
+}
+
+/* New item form container */
+.item {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f1f1f1;
+    margin: 20px;
+}
+
+/* Add button styling */
+button.add {
+    min-height: 20px;
+    width: 45px;
+    border-radius: 50%; /* Circular button */
+    border-color: transparent;
+    background-color: #00000065; /* Semi-transparent black */
+    color: #fff; /* White text */
+    font-size: 30px; /* Plus sign size */
+    border-width: 0; /* No border */
+}
