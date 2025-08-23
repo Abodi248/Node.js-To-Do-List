@@ -1,6 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
+import env from 'dotenv';
+
 
 // Create Express application
 const app = express();
@@ -10,13 +12,15 @@ const port = 3000;
 app.use(express.static("public")); // Serve static files from 'public' folder
 app.use(bodyParser.urlencoded({ extended: true })); // Parse form data
 
+env.config();
+
 // PostgreSQL database connection
 const db = new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    port: 5432,
-    database: "todolist",
-    password: "12345", // Replace with your actual password
+    user: process.env.PG_USER,
+    host: process.env.PG_HOST,
+    port: process.env.PG_PORT,
+    database: process.env.PG_DATABASE,
+    password: process.env.PG_PASSWORD, // Replace with your actual password
 });
 db.connect(); // Connect to database
 
