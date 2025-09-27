@@ -5,10 +5,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-  "start": "node app.js",
-  "build": "echo \"Build step not needed\"",
-  "test": "jest"
-  },
+    "start": "node app.js",
+    "build": "echo \"Build step not needed\"",
+    "test": "jest"
+},
+"devDependencies": {
+    "jest": "^29.6.1",
+    "supertest": "^6.3.3"
+}
+,
   "author": "Rizky",
   "license": "ISC",
   "dependencies": {
