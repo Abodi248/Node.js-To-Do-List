@@ -5,9 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "build": "echo \"Build step not needed\"",
-    "test": "echo \"No tests configured\" && exit 0"
+  "start": "node app.js",
+  "build": "echo \"Build step not needed\"",
+  "test": "jest"
   },
   "author": "Rizky",
   "license": "ISC",
