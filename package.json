@@ -5,9 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node app.js",
-    "build": "echo \"Build step not needed\""
-  },
+  "start": "node app.js",
+  "build": "echo \"Build step not needed\"",
+  "test": "echo \"No tests configured\" && exit 0"
+},
+
   "author": "Rizky",
   "license": "ISC",
   "dependencies": {
