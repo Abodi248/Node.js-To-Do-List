@@ -40,12 +40,22 @@ pipeline {
 
         stage('Release') {
             steps {
-                echo "Release stage placeholder – promote image to production tag"
-                
-                bat "docker tag %IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:latest"
-                bat "docker push %IMAGE_NAME%:latest"
+                echo "Promoting image to production tag..."
+                withCredentials([usernamePassword(credentialsId: 'DockerHub', 
+                                                  usernameVariable: 'DOCKER_USER', 
+                                                  passwordVariable: 'DOCKER_PASS')]) {
+                    // Log in to Docker Hub
+                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
+                    
+                    // Tag the image for production
+                    bat 'docker tag knockedtower/todo-app:%BUILD_NUMBER% knockedtower/todo-app:latest'
+                    
+                    // Push the tagged image
+                    bat 'docker push knockedtower/todo-app:latest'
+                }
             }
         }
+
 
         stage('Monitoring') {
             steps {
