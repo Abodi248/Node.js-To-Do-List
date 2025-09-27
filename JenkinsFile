@@ -59,12 +59,16 @@ pipeline {
 
 
         stage('Monitoring') {
-            steps {
-                echo "Monitoring placeholder – integrate Prometheus, Grafana, or Docker health checks"
-                // Example: check container status
-                // bat "docker ps | findstr %APP_NAME%"
-            }
+          steps {
+            echo "Checking container health..."
+            bat """
+              for /f "tokens=*" %%i in ('docker inspect --format "{{.State.Health.Status}}" todo-app') do (
+                if not %%i==healthy exit 1
+              )
+            """
+          }
         }
+
     }
 
     post {
