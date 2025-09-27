@@ -1,3 +1,4 @@
-export default {
-  testEnvironment: 'node',
+// jest.config.cjs
+module.exports = {
+  testEnvironment: 'node'
 };
