@@ -57,17 +57,38 @@ pipeline {
             }
         }
 
+stage('Monitoring') {
+    steps {
+        echo 'Checking container health...'
 
-        stage('Monitoring') {
-          steps {
-            echo "Checking container health..."
-            bat """
-              for /f "tokens=*" %%i in ('docker inspect --format "{{.State.Health.Status}}" todo-app') do (
-                if not %%i==healthy exit 1
-              )
-            """
-          }
-        }
+        bat """
+        set retries=0
+        set maxRetries=10
+        set healthy=false
+
+        :checkHealth
+        for /F "tokens=*" %%i in ('docker inspect --format "{{.State.Health.Status}}" todo-app') do set STATUS=%%i
+        echo Container status: %STATUS%
+        if "%STATUS%"=="healthy" (
+            set healthy=true
+            goto end
+        )
+
+        set /a retries+=1
+        if %retries% GEQ %maxRetries% (
+            echo Container did not become healthy in time.
+            exit 1
+        )
+
+        timeout /t 3 >nul
+        goto checkHealth
+
+        :end
+        echo Container is healthy!
+        """
+    }
+}
+
 
     }
 
