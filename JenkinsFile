@@ -78,7 +78,7 @@ pipeline {
             }
         }
     }
-
+}
     post {
         always {
             echo "Pipeline finished. Clean up or send notifications here."
