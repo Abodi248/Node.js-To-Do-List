@@ -65,8 +65,9 @@ stage('Monitoring and Alerting') {
                 gcr.io/datadoghq/agent:latest
             """
 
-            // Wait 10 seconds for agent to start
-            bat "timeout /t 10"
+            // Wait 10 seconds
+            powershell "Start-Sleep -Seconds 10"
+
 
             // Check agent logs for traces
             bat 'docker logs dd-agent | findstr "Trace" || echo "No traces yet, check later"'
