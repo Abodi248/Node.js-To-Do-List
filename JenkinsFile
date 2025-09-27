@@ -51,34 +51,31 @@ pipeline {
                 }
             }
         }
-    }
-    stage('Monitoring and Alerting') {
-        steps {
-            echo 'Starting Datadog monitoring check...'
-    
-            // You need your Datadog API key stored in Jenkins credentials
-            withCredentials([string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY')]) {
-                // Optionally install Datadog CLI (dd-trace is already in app)
-                bat """
-                echo Setting up Datadog Agent...
-                docker run -d --name dd-agent \\
-                    -e DD_API_KEY=%DD_API_KEY% \\
-                    -e DD_SITE=datadoghq.com \\
-                    -v /var/run/docker.sock:/var/run/docker.sock:ro \\
-                    gcr.io/datadoghq/agent:latest
-                """
-                
-                // Wait a few seconds for agent to start
-                timeout /t 10
-    
-                echo 'Verifying app traces in Datadog...'
-                // Here you could run a simple curl or use Datadog CLI to check status
-                // For example, check if the container is sending traces
-                bat 'docker logs dd-agent | findstr "Trace" || echo "No traces yet, check later"'
-            }
+stage('Monitoring and Alerting') {
+    steps {
+        echo 'Starting Datadog monitoring check...'
+
+        withCredentials([string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY')]) {
+            // Run Datadog agent
+            bat """
+            docker run -d --name dd-agent ^
+                -e DD_API_KEY=%DD_API_KEY% ^
+                -e DD_SITE=datadoghq.com ^
+                -v /var/run/docker.sock:/var/run/docker.sock:ro ^
+                gcr.io/datadoghq/agent:latest
+            """
+
+            // Wait 10 seconds for agent to start
+            bat "timeout /t 10"
+
+            // Check agent logs for traces
+            bat 'docker logs dd-agent | findstr "Trace" || echo "No traces yet, check later"'
         }
     }
 }
+
+    }
+
     post {
         always {
             echo "Pipeline finished. Clean up or send notifications here."
