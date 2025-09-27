@@ -16,8 +16,6 @@ pipeline {
     stage('Test') {
         steps {
             echo "Installing dependencies..."
-            bat "npm cache clean --force"
-
             bat "npm ci"
             echo "Running tests..."
             bat "npm test"
