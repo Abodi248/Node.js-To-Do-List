@@ -41,9 +41,9 @@ pipeline {
         stage('Release') {
             steps {
                 echo "Release stage placeholder – promote image to production tag"
-                // Example:
-                // bat "docker tag %IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:latest"
-                // bat "docker push %IMAGE_NAME%:latest"
+                
+                bat "docker tag %IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:latest"
+                bat "docker push %IMAGE_NAME%:latest"
             }
         }
 
