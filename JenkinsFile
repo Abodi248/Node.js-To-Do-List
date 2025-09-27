@@ -25,7 +25,7 @@ pipeline {
     }
     stage('Deploy') {
         steps {
-            bat 'docker run -d -p 3000:3000 --name todo-app yourdockerhubusername/todo-app:7 || exit 0'
+            bat 'docker run -d -p 3000:3000 --name todo-app yourdockerhubusername/todo-app:8 || exit 0'
         }
     }
 
