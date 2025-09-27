@@ -73,8 +73,6 @@ pipeline {
                     echo Container did not become healthy in time.
                     exit 1
                 )
-
-                timeout /t 5 >nul
                 goto checkHealth
 
                 :end
