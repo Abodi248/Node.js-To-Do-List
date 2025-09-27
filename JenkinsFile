@@ -20,12 +20,12 @@ pipeline {
 
     stage('Security') {
       steps {
-        sh 'trivy image --severity HIGH,CRITICAL --exit-code 1 $IMAGE_NAME:$IMAGE_TAG || echo "Vulnerabilities found"'
+        bat 'trivy image --severity HIGH,CRITICAL --exit-code 1 $IMAGE_NAME:$IMAGE_TAG || echo "Vulnerabilities found"'
       }
     }
     stage('Deploy') {
       steps {
-        sh 'docker-compose up -d'
+        bat 'docker-compose up -d'
       }
     }
   }
