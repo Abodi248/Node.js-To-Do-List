@@ -1,33 +1,71 @@
 pipeline {
-  agent any
-  environment {
-    APP_NAME = "todo-app"
-    IMAGE_NAME = "yourdockerhubusername/todo-app"
-    IMAGE_TAG = "${env.BUILD_NUMBER}"
-  }
-  stages {
-    stage('Build') {
-      steps {
-        bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
-      }
+    agent any
+    environment {
+        APP_NAME = "todo-app"
+        IMAGE_NAME = "yourdockerhubusername/todo-app"
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
-    stage('Test') {
-      steps {
-        bat "npm install"
-        // if no tests exist yet, allow it to pass
-        bat "npm test || exit 0"
-      }
-    }
-    stage('Security') {
-        steps {
-            bat 'echo "Security scan placeholder - Trivy not installed"'
+    stages {
+        stage('Build') {
+            steps {
+                echo "Building Docker image..."
+                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
+            }
         }
-    }
-    stage('Deploy') {
-        steps {
-            bat 'docker run -d -p 3000:3000 --name todo-app yourdockerhubusername/todo-app:8 || exit 0'
+
+        stage('Test') {
+            steps {
+                echo "Installing dependencies..."
+                bat "npm ci"
+                echo "Running tests..."
+                bat "npm test"
+            }
+        }
+
+        stage('Security') {
+            steps {
+                echo "Running Trivy security scan..."
+                // fail the build if critical vulnerabilities exist
+                bat "trivy image --severity CRITICAL %IMAGE_NAME%:%IMAGE_TAG% || echo 'Security scan done'"
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo "Removing old container (if exists)..."
+                bat "docker rm -f %APP_NAME% || echo 'No existing container'"
+                echo "Deploying container..."
+                bat "docker run -d -p 3000:3000 --name %APP_NAME% %IMAGE_NAME%:%IMAGE_TAG%"
+            }
+        }
+
+        stage('Release') {
+            steps {
+                echo "Release stage placeholder – promote image to production tag"
+                // Example:
+                // bat "docker tag %IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:latest"
+                // bat "docker push %IMAGE_NAME%:latest"
+            }
+        }
+
+        stage('Monitoring') {
+            steps {
+                echo "Monitoring placeholder – integrate Prometheus, Grafana, or Docker health checks"
+                // Example: check container status
+                // bat "docker ps | findstr %APP_NAME%"
+            }
         }
     }
 
-  }
+    post {
+        always {
+            echo "Pipeline finished. Clean up or send notifications here."
+        }
+        failure {
+            echo "Pipeline failed! Notify the team."
+        }
+        success {
+            echo "Pipeline succeeded!"
+        }
+    }
 }
