@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         APP_NAME = "todo-app"
-        IMAGE_NAME = "yourdockerhubusername/todo-app"
+        IMAGE_NAME = "knockedtower/todo-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
     stages {
