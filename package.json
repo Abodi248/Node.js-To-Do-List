@@ -6,9 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "build": "echo 'Build step not needed'"
-  }
-
+    "build": "echo \"Build step not needed\""
+  },
   "author": "Rizky",
   "license": "ISC",
   "dependencies": {
