@@ -24,11 +24,10 @@ pipeline {
 
         stage('Security') {
             steps {
-                echo "Running Trivy security scan..."
-                // fail the build if critical vulnerabilities exist
-                bat "trivy image --severity CRITICAL %IMAGE_NAME%:%IMAGE_TAG% || echo 'Security scan done'"
+                bat 'C:\\Users\\abodi\\Downloads\\trivy_0.66.0_windows-64bit\\trivy.exe image --severity CRITICAL %IMAGE_NAME%:%IMAGE_TAG% || echo Security scan done'
             }
         }
+
 
         stage('Deploy') {
             steps {
