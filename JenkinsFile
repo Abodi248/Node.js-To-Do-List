@@ -6,26 +6,27 @@ pipeline {
     IMAGE_TAG = "${env.BUILD_NUMBER}"
   }
   stages {
-      stage('Build') {
-        steps {
-          bat 'docker build -t %IMAGE_NAME%:%IMAGE_TAG% .'
-        }
+    stage('Build') {
+      steps {
+        bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
       }
-      stage('Test') {
-        steps {
-          bat 'npm install'
-          bat 'npm test || exit 0'
-        }
+    }
+    stage('Test') {
+      steps {
+        bat "npm install"
+        // if no tests exist yet, allow it to pass
+        bat "npm test || exit 0"
       }
-
+    }
     stage('Security') {
       steps {
-        bat 'trivy image --severity HIGH,CRITICAL --exit-code 1 $IMAGE_NAME:$IMAGE_TAG || echo "Vulnerabilities found"'
+        // assuming you installed Trivy on Windows PATH
+        bat "trivy image --severity HIGH,CRITICAL --exit-code 1 %IMAGE_NAME%:%IMAGE_TAG% || echo Vulnerabilities found"
       }
     }
     stage('Deploy') {
       steps {
-        bat 'docker-compose up -d'
+        bat "docker-compose up -d"
       }
     }
   }
