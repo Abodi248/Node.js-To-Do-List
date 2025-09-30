@@ -56,6 +56,9 @@ stage('Monitoring and Alerting') {
         echo 'Starting Datadog monitoring check...'
 
         withCredentials([string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY')]) {
+
+            // Remove old dd-agent container if it exists
+            bat "docker rm -f dd-agent || echo 'No existing dd-agent container'"
             // Run Datadog agent
             bat """
             docker run -d --name dd-agent ^
