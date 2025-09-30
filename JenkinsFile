@@ -63,7 +63,7 @@ stage('Monitoring and Alerting') {
             bat """
             docker run -d --name dd-agent ^
                 -e DD_API_KEY=%DD_API_KEY% ^
-                -e DD_SITE=datadoghq.com ^
+                -e DD_SITE=ap2.datadoghq.com ^
                 -v /var/run/docker.sock:/var/run/docker.sock:ro ^
                 gcr.io/datadoghq/agent:latest
             """
