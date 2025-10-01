@@ -23,7 +23,7 @@ pipeline {
     }
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
+                withSonarQubeEnv('SonarCube') {
                     echo "Running SonarQube analysis..."
                     bat 'mvn sonar:sonar -Dsonar.projectKey=todo-app -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=%SONAR_AUTH_TOKEN%'
                 }
