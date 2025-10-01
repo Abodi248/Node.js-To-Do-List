@@ -1,5 +1,15 @@
 import request from 'supertest';
-import app from '../index.js'; // your real app, exported from index.js
+import app from '../index.js';
+import pg from 'pg';
+
+jest.mock('pg', () => {
+  const mClient = {
+    connect: jest.fn(),
+    query: jest.fn().mockResolvedValue({ rows: [] }),
+    end: jest.fn(),
+  };
+  return { Client: jest.fn(() => mClient) };
+});
 
 describe('Health Check', () => {
   it('GET /health should return 200 and status OK', async () => {
@@ -10,14 +20,11 @@ describe('Health Check', () => {
 });
 
 describe('CRUD Operations', () => {
-  // NOTE: You can mock db calls if you don’t want a live DB in CI.
-  // Example: jest.mock('pg') and fake responses.
-
   it('POST /add should add a new task', async () => {
     const res = await request(app)
       .post('/add')
       .send({ newItem: 'Test Task' });
-    expect([200, 302]).toContain(res.status); // redirect or success
+    expect([200, 302]).toContain(res.status);
   });
 
   it('POST /edit should edit an existing task', async () => {
