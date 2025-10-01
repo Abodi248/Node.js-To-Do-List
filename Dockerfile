@@ -2,15 +2,20 @@
 FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
+RUN npm ci --production=false
+COPY src/ ./src/
+COPY public/ ./public/
+COPY index.js ./
+COPY jest.config.cjs ./
 
-# Run stage
-FROM node:18-alpine
+
+FROM node:18-alpine AS production
+
 WORKDIR /app
-COPY --from=builder /app .
+COPY package*.json ./
+RUN npm ci --production
+COPY --from=builder /app ./
 EXPOSE 3000
 
-# Start the app
-CMD ["npm", "start"]
+CMD ["node", "index.js"]
+
