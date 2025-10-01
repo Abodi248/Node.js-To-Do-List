@@ -10,8 +10,10 @@ const app = express();
 const port = 3000;
 
 // Middleware setup
-app.use(express.static("public")); // Serve static files from 'public' folder
-app.use(bodyParser.json());
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true })); // for form data
+app.use(express.json()); // parse JSON bodies
+
 
 
 env.config();
