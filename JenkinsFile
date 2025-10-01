@@ -82,10 +82,6 @@ pipeline {
         }
 
 
-                }
-            }
-        }
-
         stage('Monitoring and Alerting') {
             steps {
                 echo 'Starting Datadog monitoring check...'
