@@ -24,22 +24,18 @@ pipeline {
 
 
 
-stage('SonarQube Analysis') {
-    steps {
-        withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
-            bat """
-            docker run --rm ^
-                -e SONAR_HOST_URL=http://host.docker.internal:9000 ^
-                -e SONAR_LOGIN=%SONAR_TOKEN% ^
-                -v %CD%:/usr/src ^
-                sonarsource/sonar-scanner-cli ^
-                -Dsonar.projectKey=todo-app ^
-                -Dsonar.sources=/usr/src ^
-                -Dsonar.login=%SONAR_TOKEN%
-            """
-        }
-    }
+withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
+    bat """
+    docker run --rm ^
+        -e SONAR_HOST_URL=http://host.docker.internal:9000 ^
+        -v %CD%:/usr/src ^
+        sonarsource/sonar-scanner-cli ^
+        -Dsonar.projectKey=todo-app ^
+        -Dsonar.sources=/usr/src ^
+        -Dsonar.login=${SONAR_TOKEN}
+    """
 }
+
 
 
 
