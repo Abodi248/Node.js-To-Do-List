@@ -21,14 +21,14 @@ pipeline {
             bat "npm test"
         }
     }
-     stage('SonarQube Analysis') {
-        steps {
-            withSonarQubeEnv('SonarCube') { 
-                // Runs the Jenkins-installed scanner
-                bat "sonar-scanner -Dsonar.projectKey=todo-app -Dsonar.sources=."
-            }
+stage('SonarQube Analysis') {
+    steps {
+        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+            bat "node sonar.js"
         }
     }
+}
+
 
 
         stage('Security') {
