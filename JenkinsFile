@@ -22,26 +22,21 @@ pipeline {
         }
     }
 
-        stage('SonarQube Analysis') {
-            steps {
-                echo 'Running SonarQube analysis'
-                withSonarQubeEnv('SonarCube') { // Must match the SonarQube server configured in Jenkins
-                    script {
-                        def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                        bat """
-                        "${scannerHome}\\bin\\sonar-scanner.bat" ^
-                          -Dsonar.projectKey=todo-app ^
-                          -Dsonar.sources=.
+    stage('SonarQube Analysis') {
+        steps {
+            echo 'Running SonarQube analysis'
+            withSonarQubeEnv('SonarCube') { // Must match the SonarQube server configured in Jenkins
+                script {
+                    def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                    bat """
+                    "${scannerHome}\\bin\\sonar-scanner.bat" ^
+                        -Dsonar.projectKey=todo-app ^
+                        -Dsonar.sources=.
                         """
                     }
                 }
             }
         }
-
-
-
-
-
 
         stage('Security') {
             steps {
@@ -71,32 +66,33 @@ pipeline {
                 }
             }
         }
-stage('Monitoring and Alerting') {
-    steps {
-        echo 'Starting Datadog monitoring check...'
 
-        withCredentials([string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY')]) {
-
-            // Remove old dd-agent container if it exists
-            bat "docker rm -f dd-agent || echo 'No existing dd-agent container'"
-            // Run Datadog agent
-            bat """
-            docker run -d --name dd-agent ^
-                -e DD_API_KEY=%DD_API_KEY% ^
-                -e DD_SITE=ap2.datadoghq.com ^
-                -v /var/run/docker.sock:/var/run/docker.sock:ro ^
-                gcr.io/datadoghq/agent:latest
-            """
-
-            // Wait 10 seconds
-            powershell "Start-Sleep -Seconds 10"
-
-
-            // Check agent logs for traces
-            bat 'docker logs dd-agent | findstr "Trace" || echo "No traces yet, check later"'
+        stage('Monitoring and Alerting') {
+            steps {
+                echo 'Starting Datadog monitoring check...'
+        
+                withCredentials([string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY')]) {
+        
+                    // Remove old dd-agent container if it exists
+                    bat "docker rm -f dd-agent || echo 'No existing dd-agent container'"
+                    // Run Datadog agent
+                    bat """
+                    docker run -d --name dd-agent ^
+                        -e DD_API_KEY=%DD_API_KEY% ^
+                        -e DD_SITE=ap2.datadoghq.com ^
+                        -v /var/run/docker.sock:/var/run/docker.sock:ro ^
+                        gcr.io/datadoghq/agent:latest
+                    """
+        
+                    // Wait 10 seconds
+                    powershell "Start-Sleep -Seconds 10"
+        
+        
+                    // Check agent logs for traces
+                    bat 'docker logs dd-agent | findstr "Trace" || echo "No traces yet, check later"'
+                }
+            }
         }
-    }
-}
 
     }
 
