@@ -23,7 +23,7 @@ pipeline {
     }
 stage('SonarQube Analysis') {
     steps {
-        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+        withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
             bat "node sonar.js"
         }
     }
