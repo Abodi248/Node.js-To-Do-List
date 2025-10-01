@@ -1,20 +1,36 @@
 import request from 'supertest';
-import express from 'express';
-import bodyParser from 'body-parser';
+import app from '../index.js'; // your real app, exported from index.js
 
-// Minimal example of your app
-const app = express();
-app.use(bodyParser.json());
-
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
-
-describe('Basic API tests', () => {
-  it('GET /health should return 200 and status ok', async () => {
+describe('Health Check', () => {
+  it('GET /health should return 200 and status OK', async () => {
     const res = await request(app).get('/health');
-    expect(res.statusCode).toBe(200);
-    expect(res.body.status).toBe('ok');
+    expect(res.status).toBe(200);
+    expect(res.text).toBe('OK');
   });
 });
 
+describe('CRUD Operations', () => {
+  // NOTE: You can mock db calls if you don’t want a live DB in CI.
+  // Example: jest.mock('pg') and fake responses.
+
+  it('POST /add should add a new task', async () => {
+    const res = await request(app)
+      .post('/add')
+      .send({ newItem: 'Test Task' });
+    expect([200, 302]).toContain(res.status); // redirect or success
+  });
+
+  it('POST /edit should edit an existing task', async () => {
+    const res = await request(app)
+      .post('/edit')
+      .send({ updatedItemId: 1, updatedItemTitle: 'Updated Task' });
+    expect([200, 302]).toContain(res.status);
+  });
+
+  it('POST /delete should delete an existing task', async () => {
+    const res = await request(app)
+      .post('/delete')
+      .send({ deleteTaskId: 1 });
+    expect([200, 302]).toContain(res.status);
+  });
+});
