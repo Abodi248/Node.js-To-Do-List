@@ -22,23 +22,20 @@ pipeline {
         }
     }
 
-stage('Code Quality') {
+stage('SonarQube Analysis') {
     steps {
-        echo 'Running SonarQube analysis'
-        script {
-            def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-            withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
-                withSonarQubeEnv('SonarCube') {
-                    bat "${scannerHome}\\bin\\sonar-scanner.bat " +
-                        "-Dsonar.projectKey=todo-app " +
-                        "-Dsonar.sources=. " +
-                        "-Dsonar.login=%SONAR_TOKEN%"
-                }
+        withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
+            withSonarQubeEnv('SonarCube') {
+                bat """
+                set SONAR_TOKEN=%SONAR_TOKEN%
+                ${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}\\bin\\sonar-scanner.bat ^
+                  -Dsonar.projectKey=todo-app ^
+                  -Dsonar.sources=.
+                """
             }
         }
     }
 }
-
 
 
 
