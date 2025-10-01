@@ -66,8 +66,17 @@ pipeline {
                     bat 'docker tag %IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:latest'
                     bat 'docker push %IMAGE_NAME%:latest'
 
-                    bat "git tag v%BUILD_NUMBER%"
-                    bat "git push origin v%BUILD_NUMBER%"
+                    //bat "git tag v%BUILD_NUMBER%"
+                    //bat "git push origin v%BUILD_NUMBER%"
+
+withCredentials([usernamePassword(credentialsId: 'GitHubCreds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+    bat 'git config user.email "abodiqadri@gmail.com'
+    bat 'git config user.name %GIT_USER%'
+    bat 'git remote set-url origin https://%GIT_USER%:%GIT_PASS%@github.com/Abodi248/Node.js-To-Do-List.git'
+    bat "git tag v%BUILD_NUMBER%"
+    bat "git push origin v%BUILD_NUMBER%"
+}
+
                 }
             }
         }
