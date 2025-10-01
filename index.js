@@ -98,3 +98,5 @@ app.get('/health', async (req, res) => {
   }
 });
 
+
+export default app;
