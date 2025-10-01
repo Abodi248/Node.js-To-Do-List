@@ -21,6 +21,9 @@ pipeline {
             bat "npm test"
         }
     }
+
+
+
 stage('SonarQube Analysis') {
     steps {
         withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
@@ -31,7 +34,8 @@ stage('SonarQube Analysis') {
                 -v %CD%:/usr/src ^
                 sonarsource/sonar-scanner-cli ^
                 -Dsonar.projectKey=todo-app ^
-                -Dsonar.sources=/usr/src
+                -Dsonar.sources=/usr/src ^
+                -Dsonar.login=%SONAR_TOKEN%
             """
         }
     }
