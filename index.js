@@ -11,7 +11,8 @@ const port = 3000;
 
 // Middleware setup
 app.use(express.static("public")); // Serve static files from 'public' folder
-app.use(bodyParser.urlencoded({ extended: true })); // Parse form data
+app.use(bodyParser.json());
+
 
 env.config();
 
