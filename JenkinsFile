@@ -22,23 +22,23 @@ pipeline {
         }
     }
 
-
-
-stage('SonarQube Analysis') {
+stage('Code Quality') {
     steps {
-        withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
-            bat """
-            docker run --rm ^
-                -e SONAR_HOST_URL=http://localhost:9000 ^
-                -v %CD%:/usr/src ^
-                sonarsource/sonar-scanner-cli ^
-                -Dsonar.projectKey=todo-app ^
-                -Dsonar.sources=/usr/src ^
-                -Dsonar.login=${SONAR_TOKEN}
-            """
+        echo 'Running SonarQube analysis'
+        script {
+            def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+            withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
+                withSonarQubeEnv('SonarQube-Local') {
+                    bat "${scannerHome}\\bin\\sonar-scanner.bat " +
+                        "-Dsonar.projectKey=todo-app " +
+                        "-Dsonar.sources=. " +
+                        "-Dsonar.login=%SONAR_TOKEN%"
+                }
+            }
         }
     }
 }
+
 
 
 
