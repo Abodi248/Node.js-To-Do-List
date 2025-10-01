@@ -24,14 +24,22 @@ pipeline {
 
 stage('SonarQube Analysis') {
     steps {
+        echo 'Running SonarQube analysis'
         withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
-            withSonarQubeEnv('SonarCube') {
-                bat """
-                set SONAR_TOKEN=%SONAR_TOKEN%
-                ${tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'}\\bin\\sonar-scanner.bat ^
-                  -Dsonar.projectKey=todo-app ^
-                  -Dsonar.sources=.
-                """
+            withSonarQubeEnv('SonarCube') { // must match your SonarQube name in Jenkins
+                script {
+                    def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                    bat """
+                    @echo off
+                    setlocal
+                    set SONAR_TOKEN=%SONAR_TOKEN%
+                    echo Using SonarScanner at: ${scannerHome}\\bin\\sonar-scanner.bat
+                    "${scannerHome}\\bin\\sonar-scanner.bat" ^
+                      -Dsonar.projectKey=todo-app ^
+                      -Dsonar.sources=. 
+                    endlocal
+                    """
+                }
             }
         }
     }
