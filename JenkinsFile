@@ -56,30 +56,30 @@ pipeline {
 
 
 
-stage('Release') {
-    steps {
-        echo "Promoting image to production tag..."
-        withCredentials([usernamePassword(credentialsId: 'DockerHub', 
-                                          usernameVariable: 'DOCKER_USER', 
-                                          passwordVariable: 'DOCKER_PASS')]) {
-            bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
-            bat 'docker tag %IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:%IMAGE_TAG%'
-            bat 'docker push %IMAGE_NAME%:%IMAGE_TAG%'
-            bat 'docker tag %IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:latest'
-            bat 'docker push %IMAGE_NAME%:latest'
-        }   
-
-        withCredentials([usernamePassword(credentialsId: 'GitHubToken',
-                                          usernameVariable: 'GIT_USER',
-                                          passwordVariable: 'GIT_TOKEN')]) {
-            bat 'git config user.email "abodiqadri@gmail.com"'
-            bat 'git config user.name "Jenkins CI"'
-            bat 'git remote set-url origin https://%GIT_USER%:%GIT_TOKEN%@github.com/Abodi248/Node.js-To-Do-List.git'
-            bat "git tag v%BUILD_NUMBER%"
-            bat "git push origin v%BUILD_NUMBER%"
-        }   
-    }
-}
+        stage('Release') {
+            steps {
+                echo "Promoting image to production tag..."
+                withCredentials([usernamePassword(credentialsId: 'DockerHub', 
+                                                  usernameVariable: 'DOCKER_USER', 
+                                                  passwordVariable: 'DOCKER_PASS')]) {
+                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
+                    bat 'docker tag %IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:%IMAGE_TAG%'
+                    bat 'docker push %IMAGE_NAME%:%IMAGE_TAG%'
+                    bat 'docker tag %IMAGE_NAME%:%IMAGE_TAG% %IMAGE_NAME%:latest'
+                    bat 'docker push %IMAGE_NAME%:latest'
+                }   
+        
+                withCredentials([usernamePassword(credentialsId: 'GitHubToken',
+                                                  usernameVariable: 'GIT_USER',
+                                                  passwordVariable: 'GIT_TOKEN')]) {
+                    bat 'git config user.email "abodiqadri@gmail.com"'
+                    bat 'git config user.name "Jenkins CI"'
+                    bat 'git remote set-url origin https://%GIT_USER%:%GIT_TOKEN%@github.com/Abodi248/Node.js-To-Do-List.git'
+                    bat "git tag v%BUILD_NUMBER%"
+                    bat "git push origin v%BUILD_NUMBER%"
+                }   
+            }
+        }
 
 
                 }
@@ -113,7 +113,7 @@ stage('Release') {
             }
         }
 
-    
+}    
 
     post {
         always {
