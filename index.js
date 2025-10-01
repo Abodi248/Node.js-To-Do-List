@@ -1,105 +1,80 @@
-import 'dd-trace/init'; 
-import express from "express";
-import bodyParser from "body-parser";
-import pg from "pg";
-import env from 'dotenv';
+require('dd-trace/init');
+const express = require('express');
+const bodyParser = require('body-parser');
+const pg = require('pg');
+const dotenv = require('dotenv');
 
+dotenv.config();
 
-// Create Express application
 const app = express();
 const port = 3000;
 
-// Middleware setup
-app.use(express.static("public"));
-app.use(express.urlencoded({ extended: true })); // for form data
-app.use(express.json()); // parse JSON bodies
+// Middleware
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // For JSON parsing
 
-
-
-env.config();
-
-// PostgreSQL database connection
+// Database connection
 const db = new pg.Client({
-    user: process.env.PG_USER,
-    host: process.env.PG_HOST,
-    port: process.env.PG_PORT,
-    database: process.env.PG_DATABASE,
-    password: process.env.PG_PASSWORD, // Replace with your actual password
+  user: process.env.PG_USER,
+  host: process.env.PG_HOST,
+  port: process.env.PG_PORT,
+  database: process.env.PG_DATABASE,
+  password: process.env.PG_PASSWORD,
 });
-db.connect(); // Connect to database
+db.connect();
 
-// GET route - Fetch all todo items from database
+// Routes
 app.get('/', async (req, res) => {
-    try {
-        // Query database for all items
-        const result = await db.query("SELECT * FROM items");
-        // Render index.ejs template with the retrieved data
-        res.render('index.ejs', { items: result.rows });
-    } catch (error) {
-        console.log(error); // Log any errors
-    }
+  try {
+    const result = await db.query('SELECT * FROM items');
+    res.render('index.ejs', { items: result.rows });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-// DELETE route - Remove a todo item
 app.post('/delete', async (req, res) => {
-    try {
-        // Get ID from form submission
-        const id = req.body.deleteTaskId;
-        // Delete item from database
-        await db.query("DELETE FROM items WHERE id = $1", [id]);
-        // Redirect back to homepage
-        res.redirect('/');
-    } catch (error) {
-        console.log(error); // Log errors   
-    }
+  try {
+    const id = req.body.deleteTaskId;
+    await db.query('DELETE FROM items WHERE id = $1', [id]);
+    res.redirect('/');
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-// ADD route - Create new todo item
 app.post('/add', async (req, res) => {
-    // Get and clean input
-    let item = req.body.newItem?.trim();
-    try {
-        // Check for empty input
-        if (!item) {
-           return res.redirect('/');
-        }
-
-        // Capitalize first letter
-        item = item.charAt(0).toUpperCase() + item.slice(1);
-
-        // Insert new item into database
-        await db.query("INSERT INTO items (item) VALUES ($1)", [item]);
-        res.redirect('/');
-    } catch (error) {
-        console.log(error);   
-    }
+  let item = req.body.newItem?.trim();
+  try {
+    if (!item) return res.redirect('/');
+    item = item.charAt(0).toUpperCase() + item.slice(1);
+    await db.query('INSERT INTO items (item) VALUES ($1)', [item]);
+    res.redirect('/');
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-// EDIT route - Update existing todo item
 app.post('/edit', async (req, res) => {
-    // Get item ID and updated text
-    const id = req.body.updatedItemId;
-    let item = req.body.updatedItemTitle?.trim();
-
-    try {
-        // Capitalize first letter
-        item = item.charAt(0).toUpperCase() + item.slice(1);
-        // Update database record
-        await db.query("UPDATE items SET item = $1 WHERE id = $2", [item, id]);
-        res.redirect('/');
-    } catch (error) {
-        console.log(error);   
-    }
+  const id = req.body.updatedItemId;
+  let item = req.body.updatedItemTitle?.trim();
+  try {
+    item = item.charAt(0).toUpperCase() + item.slice(1);
+    await db.query('UPDATE items SET item = $1 WHERE id = $2', [item, id]);
+    res.redirect('/');
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.get('/health', async (req, res) => {
   try {
-    await db.query('SELECT 1'); // simple DB ping
+    await db.query('SELECT 1');
     res.status(200).send('OK');
   } catch (err) {
     res.status(503).send('DB not ready');
   }
 });
 
-
-export default app;
+module.exports = app; // <-- Export for CommonJS
