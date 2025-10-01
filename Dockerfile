@@ -3,7 +3,10 @@ FROM node:18-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-COPY . .
+COPY src ./src
+COPY public ./public
+COPY package*.json ./
+
 RUN npm run build
 
 # Run stage
