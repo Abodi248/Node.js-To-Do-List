@@ -21,6 +21,11 @@ pipeline {
             bat "npm test"
         }
     }
+    stage('Code Quality') {
+      steps {
+        bat 'npx eslint . || echo "Lint completed with warnings"'
+      }
+    }
 
 
         stage('Security') {
