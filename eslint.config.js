@@ -2,7 +2,6 @@
 import { defineConfig } from "eslint-define-config";
 
 export default defineConfig({
-  root: true,
   env: {
     node: true,
     es2022: true,
