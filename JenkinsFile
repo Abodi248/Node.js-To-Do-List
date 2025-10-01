@@ -28,7 +28,7 @@ stage('Code Quality') {
         script {
             def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
             withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
-                withSonarQubeEnv('SonarQube-Local') {
+                withSonarQubeEnv('SonarCube') {
                     bat "${scannerHome}\\bin\\sonar-scanner.bat " +
                         "-Dsonar.projectKey=todo-app " +
                         "-Dsonar.sources=. " +
