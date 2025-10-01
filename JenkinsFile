@@ -25,15 +25,18 @@ stage('SonarQube Analysis') {
     steps {
         withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
             bat """
-            sonar-scanner ^
-              -Dsonar.projectKey=todo-app ^
-              -Dsonar.sources=. ^
-              -Dsonar.host.url=http://localhost:9000 ^
-              -Dsonar.login=%SONAR_TOKEN%
+            docker run --rm ^
+                -e SONAR_HOST_URL=http://host.docker.internal:9000 ^
+                -e SONAR_LOGIN=%SONAR_TOKEN% ^
+                -v %CD%:/usr/src ^
+                sonarsource/sonar-scanner-cli ^
+                -Dsonar.projectKey=todo-app ^
+                -Dsonar.sources=/usr/src
             """
         }
     }
 }
+
 
 
 
