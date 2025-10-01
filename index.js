@@ -89,11 +89,6 @@ app.post('/edit', async (req, res) => {
     }
 });
 
-// Start server
-// Start server
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Server running on port: ${port}`);
-});
 app.get('/health', async (req, res) => {
   try {
     await db.query('SELECT 1'); // simple DB ping
