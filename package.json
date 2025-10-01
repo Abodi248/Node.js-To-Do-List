@@ -8,6 +8,7 @@
     "start": "node index.js",
     "build": "echo \"Build step not needed\"",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.cjs"
+    "lint": "eslint . --max-warnings=0"
   },
   "devDependencies": {
     "eslint": "^9.36.0",
