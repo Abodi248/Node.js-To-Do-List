@@ -21,7 +21,14 @@ pipeline {
             bat "npm test"
         }
     }
-
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQube') {
+                    echo "Running SonarQube analysis..."
+                    bat 'mvn sonar:sonar -Dsonar.projectKey=todo-app -Dsonar.host.url=%SONAR_HOST_URL% -Dsonar.login=%SONAR_AUTH_TOKEN%'
+                }
+            }
+        }
 
         stage('Security') {
             steps {
