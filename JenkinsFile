@@ -24,10 +24,17 @@ pipeline {
 stage('SonarQube Analysis') {
     steps {
         withCredentials([string(credentialsId: 'SonarCube', variable: 'SONAR_TOKEN')]) {
-            bat "node sonar.js"
+            bat """
+            sonar-scanner ^
+              -Dsonar.projectKey=todo-app ^
+              -Dsonar.sources=. ^
+              -Dsonar.host.url=http://localhost:9000 ^
+              -Dsonar.login=%SONAR_TOKEN%
+            """
         }
     }
 }
+
 
 
 
