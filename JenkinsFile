@@ -46,6 +46,7 @@ stage('Code Quality') {
 
 
 
+
         stage('Security') {
             steps {
                 bat 'C:\\Users\\abodi\\Downloads\\trivy_0.66.0_windows-64bit\\trivy.exe image --severity CRITICAL %IMAGE_NAME%:%IMAGE_TAG% || echo Security scan done'
