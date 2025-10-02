@@ -5,6 +5,8 @@ scanner.scan({
   token: process.env.SONAR_TOKEN,
   options: {
     'sonar.projectKey': 'todo-app',
-    'sonar.sources': '.'
+    'sonar.sources': '.',
+    'sonar.exclusions': 'node_modules/**,coverage/**',
+    'sonar.javascript.lcov.reportPaths': 'coverage/lcov.info'
   }
 }, () => process.exit());
