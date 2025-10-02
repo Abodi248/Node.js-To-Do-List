@@ -62,7 +62,13 @@ stage('SonarQube Analysis') {
                 echo "Removing old container (if exists)..."
                 bat "docker rm -f %APP_NAME% || echo 'No existing container'"
                 echo "Deploying container..."
-                bat "docker run -d -p 3000:3000 --name %APP_NAME% %IMAGE_NAME%:%IMAGE_TAG%"
+                docker run -d -p 3000:3000 --name %APP_NAME% ^
+                  -e PG_USER=postgres ^
+                  -e PG_PASSWORD=0567 ^
+                  -e PG_HOST=host.docker.internal ^
+                  -e PG_PORT=5432 ^
+                  -e PG_DATABASE=todolist ^
+                  %IMAGE_NAME%:%IMAGE_TAG%
             }
         }
 
