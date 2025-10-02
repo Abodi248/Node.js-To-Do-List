@@ -1,4 +1,6 @@
-// jest.config.cjs
 module.exports = {
-  testEnvironment: 'node'
+  testEnvironment: 'node',
+  collectCoverage: true,
+  coverageReporters: ['lcov', 'text', 'text-summary'],
+  coverageDirectory: 'coverage'
 };
