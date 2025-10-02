@@ -2,8 +2,8 @@
   "name": "todolist",
   "version": "1.0.0",
   "description": "Javascript to do list with Postgres",
-  "main": "index.js",
-  "type": "module",
+  "main": "index.cjs",
+  "type": "commonjs",
   "scripts": {
     "start": "node index.cjs",
     "build": "echo \"Built\"",
