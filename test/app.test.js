@@ -1,3 +1,4 @@
+// Mock pg only ONCE
 jest.mock('pg', () => {
   const mClient = {
     connect: jest.fn().mockResolvedValue(), // resolves immediately
@@ -9,8 +10,8 @@ jest.mock('pg', () => {
 
 const request = require('supertest');
 const app = require('../index.js');
-const pg = require('pg');
-
+const { Client } = require('pg');
+const mockClient = new Client();
 
 describe('Health Check', () => {
   it('GET /health should return 200 and status OK', async () => {
@@ -38,9 +39,6 @@ describe('CRUD Operations', () => {
 });
 
 describe('Edge Case Tests', () => {
-  const { Client } = require('pg');
-  const mockClient = new Client();
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -71,8 +69,5 @@ describe('Edge Case Tests', () => {
 });
 
 afterAll(async () => {
-  const { Client } = require('pg');
-  const mockClient = new Client();
   await mockClient.end(); // closes any open connections
 });
-
