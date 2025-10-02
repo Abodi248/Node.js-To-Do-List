@@ -5,8 +5,12 @@ scanner.scan({
   token: process.env.SONAR_TOKEN,
   options: {
     'sonar.projectKey': 'todo-app',
-    'sonar.sources': 'index.js', 
+    'sonar.projectName': 'todo-app',
+    'sonar.sources': '.', // base dir
+    'sonar.inclusions': 'index.js', // your real code files
     'sonar.exclusions': 'node_modules/**,coverage/**,test/**,**/*.config.js',
-    'sonar.javascript.lcov.reportPaths': 'coverage/lcov.info'
+    'sonar.coverage.exclusions': 'test/**,coverage/**,**/*.config.js', // keep test files out of coverage calc
+    'sonar.javascript.lcov.reportPaths': 'coverage/lcov.info',
+    'sonar.sourceEncoding': 'UTF-8'
   }
 }, () => process.exit());
