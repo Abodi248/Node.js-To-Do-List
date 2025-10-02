@@ -5,6 +5,7 @@ pipeline {
         IMAGE_NAME = "knockedtower/todo-app"
         IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
+
     stages {
         stage('Build') {
             steps {
@@ -21,44 +22,40 @@ pipeline {
             bat "npx jest --coverage --coverageReporters=lcov --coverageDirectory=coverage"
             bat "dir coverage"
             bat "type coverage\\lcov.info"
-
-
         }
     }
-
-stage('SonarQube Analysis') {
-    steps {
-        echo 'Running SonarQube analysis'
-        withSonarQubeEnv('SonarCube') {
-            script {
-                def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                bat """
-                cd %WORKSPACE%
-                "${scannerHome}\\bin\\sonar-scanner.bat" ^
-                    -Dsonar.projectKey=todo-app ^
-                    -Dsonar.sources=index.cjs ^
-                    -Dsonar.exclusions=node_modules/**,coverage/**,test/**,**/*.config.js ^
-                    -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info ^
-                    -Dsonar.host.url=%SONAR_HOST_URL% ^
-                    -Dsonar.token=%SONAR_AUTH_TOKEN% ^
-                    -X
-                """
+    
+    stage('SonarQube Analysis') {
+        steps {
+            echo 'Running SonarQube analysis'
+            withSonarQubeEnv('SonarCube') {
+                script {
+                    def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                    bat """
+                    cd %WORKSPACE%
+                    "${scannerHome}\\bin\\sonar-scanner.bat" ^
+                        -Dsonar.projectKey=todo-app ^
+                        -Dsonar.sources=index.cjs ^
+                        -Dsonar.exclusions=node_modules/**,coverage/**,test/**,**/*.config.js ^
+                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info ^
+                        -Dsonar.host.url=%SONAR_HOST_URL% ^
+                        -Dsonar.token=%SONAR_AUTH_TOKEN% ^
+                        -X
+                    """
+                }
             }
         }
     }
-}
 
-
-
-        stage('Security') {
-            steps {
+    stage('Security') {
+        steps {
                 bat 'C:\\Users\\abodi\\Downloads\\trivy_0.66.0_windows-64bit\\trivy.exe image --severity CRITICAL %IMAGE_NAME%:%IMAGE_TAG% || echo Security scan done'
-            }
         }
+    }
 
 
-        stage('Deploy') {
-            steps {
+    stage('Deploy') {
+        steps {
                 echo "Removing old container (if exists)..."
                 bat "docker rm -f %APP_NAME% || echo 'No existing container'"
                 echo "Deploying container..."
@@ -71,13 +68,10 @@ stage('SonarQube Analysis') {
                   -e PG_DATABASE=todolist ^
                   %IMAGE_NAME%:%IMAGE_TAG%
                 """
-
-            }
         }
+    }
 
-
-
-        stage('Release') {
+    stage('Release') {
             steps {
                 echo "Promoting image to production tag..."
                 withCredentials([usernamePassword(credentialsId: 'DockerHub', 
@@ -102,14 +96,11 @@ stage('SonarQube Analysis') {
             }
         }
 
-
-        stage('Monitoring and Alerting') {
+    stage('Monitoring and Alerting') {
             steps {
                 echo 'Starting Datadog monitoring check...'
         
                 withCredentials([string(credentialsId: 'DATADOG_API_KEY', variable: 'DD_API_KEY')]) {
-        
-                    // Remove old dd-agent container if it exists
                     bat "docker rm -f dd-agent || echo 'No existing dd-agent container'"
                     // Run Datadog agent
                     bat """
@@ -119,17 +110,13 @@ stage('SonarQube Analysis') {
                         -v /var/run/docker.sock:/var/run/docker.sock:ro ^
                         gcr.io/datadoghq/agent:latest
                     """
-        
                     // Wait 10 seconds
-                    powershell "Start-Sleep -Seconds 10"
-        
-        
+                    powershell "Start-Sleep -Seconds 10"               
                     // Check agent logs for traces
                     bat 'docker logs dd-agent | findstr "Trace" || echo "No traces yet, check later"'
                 }
             }
         }
-
 }    
 
     post {
