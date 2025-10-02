@@ -1,3 +1,12 @@
+jest.mock('pg', () => {
+  const mClient = {
+    connect: jest.fn().mockResolvedValue(), // resolves immediately
+    query: jest.fn().mockResolvedValue({ rows: [] }),
+    end: jest.fn(),
+  };
+  return { Client: jest.fn(() => mClient) };
+});
+
 const request = require('supertest');
 const app = require('../index.js');
 const pg = require('pg');
@@ -68,3 +77,10 @@ describe('Edge Case Tests', () => {
     expect(res.status).toBe(302);
   });
 });
+
+afterAll(async () => {
+  const { Client } = require('pg');
+  const mockClient = new Client();
+  await mockClient.end(); // closes any open connections
+});
+
