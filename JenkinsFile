@@ -36,7 +36,7 @@ stage('SonarQube Analysis') {
                 cd %WORKSPACE%
                 "${scannerHome}\\bin\\sonar-scanner.bat" ^
                     -Dsonar.projectKey=todo-app ^
-                    -Dsonar.sources=index.js ^
+                    -Dsonar.sources=index.cjs ^
                     -Dsonar.exclusions=node_modules/**,coverage/**,test/**,**/*.config.js ^
                     -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info ^
                     -Dsonar.host.url=%SONAR_HOST_URL% ^
