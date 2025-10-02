@@ -25,10 +25,6 @@ const db = new pg.Client({
 db.connect().catch(err => console.error('DB connection failed:', err));
 
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${port}`);
-});
-
 // Routes
 app.get('/', async (req, res) => {
   try {
