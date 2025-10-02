@@ -32,9 +32,7 @@ app.get('/', async (req, res) => {
   } catch (error) {
     console.error('Error fetching items:', error);
 
-    // **Force 200 in test environment for Jest DB error tests**
-    const status = process.env.NODE_ENV === 'test' ? 200 : 500;
-    res.status(status).render('index.ejs', { items: [] }); 
+    res.render('index.ejs', { items: [] });
   }
 });
 
