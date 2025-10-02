@@ -18,7 +18,8 @@ pipeline {
             echo "Installing dependencies..."
             bat "npm ci"
             echo "Running tests..."
-            bat "npm test"
+            bat "npm test -- --coverage"
+
         }
     }
 
