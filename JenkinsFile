@@ -18,7 +18,10 @@ pipeline {
             echo "Installing dependencies..."
             bat "npm ci"
             echo "Running tests..."
-            bat "npm test -- --coverage"
+            bat "npx jest --coverage --coverageReporters=lcov --coverageDirectory=coverage"
+            bat "dir coverage"
+            bat "type coverage\\lcov.info"
+
 
         }
     }
