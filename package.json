@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "build": "echo \"Build step not needed\"",
+    "build": "echo \"Built\"",
     "test": "jest --config jest.config.cjs --coverage"
   },
   "devDependencies": {
