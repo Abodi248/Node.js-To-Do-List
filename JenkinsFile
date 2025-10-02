@@ -27,20 +27,26 @@ pipeline {
     }
 
     stage('SonarQube Analysis') {
-        steps {
-            echo 'Running SonarQube analysis'
-            withSonarQubeEnv('SonarCube') { 
-                script {
-                    def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                    bat """
-                    "${scannerHome}\\bin\\sonar-scanner.bat" ^
-                        -Dsonar.projectKey=todo-app ^
-                        -Dsonar.sources=.
-                        """
+    steps {
+        echo 'Running SonarQube analysis'
+        withSonarQubeEnv('SonarCube') {
+            script {
+                def scannerHome = tool name: 'SonarScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                bat """
+                cd %WORKSPACE%
+                "${scannerHome}\\bin\\sonar-scanner.bat" ^
+                    -Dsonar.projectKey=todo-app ^
+                    -Dsonar.sources=. ^
+                    -Dsonar.exclusions=node_modules/**,coverage/** ^
+                    -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info ^
+                    -Dsonar.login=%SONAR_AUTH_TOKEN% ^
+                    -X
+                """
                     }
                 }
             }
         }
+
 
         stage('Security') {
             steps {
