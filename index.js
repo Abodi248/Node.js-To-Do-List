@@ -73,10 +73,10 @@ app.get('/health', async (req, res) => {
     await db.query('SELECT 1');
     res.status(200).send('OK');
   } catch (err) {
-    console.error('Health check failed:', err); // <-- log the error
+    console.error('Health check failed:', err); 
     res.status(503).send('DB not ready');
   }
 });
 
 
-module.exports = app; // <-- Export for CommonJS
+module.exports = app; 
