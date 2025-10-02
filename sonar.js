@@ -7,7 +7,7 @@ scanner.scan({
     'sonar.projectKey': 'todo-app',
     'sonar.projectName': 'todo-app',
     'sonar.sources': '.', // base dir
-    'sonar.inclusions': 'index.js', // your real code files
+    'sonar.inclusions': 'index.cjs', // your real code files
     'sonar.exclusions': 'node_modules/**,coverage/**,test/**,**/*.config.js',
     'sonar.coverage.exclusions': 'test/**,coverage/**,**/*.config.js', // keep test files out of coverage calc
     'sonar.javascript.lcov.reportPaths': 'coverage/lcov.info',
