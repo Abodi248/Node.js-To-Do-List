@@ -11,14 +11,6 @@ const request = require('supertest');
 const app = require('../index.js');
 const pg = require('pg');
 
-jest.mock('pg', () => {
-  const mClient = {
-    connect: jest.fn(),
-    query: jest.fn().mockResolvedValue({ rows: [] }),
-    end: jest.fn(),
-  };
-  return { Client: jest.fn(() => mClient) };
-});
 
 describe('Health Check', () => {
   it('GET /health should return 200 and status OK', async () => {
