@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('../index.js');
+const app = require('../index.cjs');
 const pg = require('pg');
 
 jest.mock('pg', () => {
